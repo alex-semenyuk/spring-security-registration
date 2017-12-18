@@ -53,6 +53,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/changePassword.html");
         registry.addViewController("/users.html");
         registry.addViewController("/qrcode.html");
+        registry.addViewController("/management.html");
     }
 
     @Override

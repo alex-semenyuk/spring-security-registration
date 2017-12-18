@@ -47,22 +47,36 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
         final Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
         final Privilege passwordPrivilege = createPrivilegeIfNotFound("CHANGE_PASSWORD_PRIVILEGE");
+        final Privilege managePrivilege = createPrivilegeIfNotFound("MANAGE_PRIVILEGE");
 
         // == create initial roles
-        final List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege, passwordPrivilege);
+        final List<Privilege> adminPrivileges = Arrays.asList(readPrivilege, writePrivilege, passwordPrivilege, managePrivilege);
         final List<Privilege> userPrivileges = Arrays.asList(readPrivilege, passwordPrivilege);
+        final List<Privilege> managerPrivileges = Arrays.asList(readPrivilege, managePrivilege, passwordPrivilege);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", userPrivileges);
+        createRoleIfNotFound("ROLE_MANAGER", managerPrivileges);
 
         final Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-        final User user = new User();
-        user.setFirstName("Test");
-        user.setLastName("Test");
-        user.setPassword(passwordEncoder.encode("test"));
-        user.setEmail("test@test.com");
-        user.setRoles(Arrays.asList(adminRole));
-        user.setEnabled(true);
-        userRepository.save(user);
+        final Role managerRole = roleRepository.findByName("ROLE_MANAGER");
+
+        final User admin = new User();
+        admin.setFirstName("Test");
+        admin.setLastName("Test");
+        admin.setPassword(passwordEncoder.encode("test"));
+        admin.setEmail("test@test.com");
+        admin.setRoles(Arrays.asList(adminRole));
+        admin.setEnabled(true);
+        userRepository.save(admin);
+
+        final User manager = new User();
+        manager.setFirstName("Manager");
+        manager.setLastName("Man");
+        manager.setPassword(passwordEncoder.encode("trueman"));
+        manager.setEmail("man@test.com");
+        manager.setRoles(Arrays.asList(managerRole));
+        manager.setEnabled(true);
+        userRepository.save(manager);
 
         alreadySetup = true;
     }
